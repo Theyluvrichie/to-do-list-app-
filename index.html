@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>To‑Do List App</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="brand">
+        <span class="colorDot" style="background: #22c55e"></span>
+        <h1>To‑Do List App</h1>
+      </div>
+      <div class="controls">
+        <button
+          id="voiceBtn"
+          class="btn icon secondary"
+          title="Voice add (Web Speech)"
+        >
+          <i class="fas fa-microphone"></i> <span>Voice</span>
+        </button>
+        <button
+          id="notifyBtn"
+          class="btn icon secondary"
+          title="Enable reminders"
+        >
+          <i class="fas fa-bell"></i> <span>Enable reminders</span>
+        </button>
+        <button id="exportBtn" class="btn icon secondary" title="Export backup">
+          <i class="fas fa-file-export"></i> <span>Export</span>
+        </button>
+        <button id="importBtn" class="btn icon secondary" title="Import backup">
+          <i class="fas fa-file-import"></i> <span>Import</span>
+        </button>
+        <button
+          id="clearBtn"
+          class="btn icon"
+          style="border-color: var(--danger); color: var(--danger)"
+          title="Clear all"
+        >
+          <i class="fas fa-trash"></i> <span>Clear</span>
+        </button>
+        <button id="addQuickBtn" class="btn accent icon" title="Quick add">
+          <i class="fas fa-plus"></i> <span>Quick add</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside>
+        <div class="panel">
+          <h3>Create task</h3>
+          <div class="row">
+            <input
+              id="titleInput"
+              placeholder="Title (e.g., 'Submit report tomorrow 3pm #client urgent')"
+            />
+          </div>
+          <div class="row">
+            <textarea
+              id="descInput"
+              rows="3"
+              placeholder="Description (optional)"
+            ></textarea>
+          </div>
+          <div class="row">
+            <select id="listInput">
+              <option value="Inbox">Inbox</option>
+              <option value="Work">Work</option>
+              <option value="Personal">Personal</option>
+              <option value="Errands">Errands</option>
+            </select>
+            <select id="priorityInput" title="Priority">
+              <option value="P3">Priority: Low</option>
+              <option value="P2">Priority: Medium</option>
+              <option value="P1">Priority: High</option>
+              <option value="P0">Priority: Critical</option>
+            </select>
+          </div>
+          <div class="row">
+            <input id="dueInput" type="datetime-local" />
+            <input
+              id="estimateInput"
+              type="number"
+              min="0"
+              step="0.25"
+              placeholder="Estimate (hrs)"
+            />
+          </div>
+          <div class="row">
+            <input
+              id="tagsInput"
+              placeholder="Tags (comma‑separated, e.g., client,finance)"
+            />
+          </div>
+          <div class="row">
+            <select id="repeatInput" title="Recurring">
+              <option value="">Repeat: None</option>
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+            </select>
+            <input id="colorInput" type="color" value="#3b82f6" title="Color" />
+          </div>
+          <div class="row">
+            <input
+              id="depsInput"
+              placeholder="Dependencies (IDs, comma‑separated)"
+            />
+          </div>
+          <div class="row">
+            <button id="createBtn" class="btn accent">Add task</button>
+          </div>
+          <div class="chips" id="helpChips">
+            <span class="chip">Tip: Use natural language in Title</span>
+            <span class="chip">E.g. “Pay rent on 1st 9am #home urgent”</span>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Filters</h3>
+          <div class="row">
+            <input id="searchInput" placeholder="Search title, desc, tags…" />
+          </div>
+          <div class="row">
+            <select id="filterList">
+              <option value="">List: All</option>
+              <option value="Inbox">Inbox</option>
+              <option value="Work">Work</option>
+              <option value="Personal">Personal</option>
+              <option value="Errands">Errands</option>
+            </select>
+            <select id="filterPriority">
+              <option value="">Priority: All</option>
+              <option value="P0">Critical</option>
+              <option value="P1">High</option>
+              <option value="P2">Medium</option>
+              <option value="P3">Low</option>
+            </select>
+          </div>
+          <div class="row">
+            <select id="filterStatus">
+              <option value="">Status: All</option>
+              <option value="todo">To Do</option>
+              <option value="doing">In Progress</option>
+              <option value="done">Done</option>
+              <option value="blocked">Blocked</option>
+            </select>
+            <select id="filterDue">
+              <option value="">Due: Any</option>
+              <option value="overdue">Overdue</option>
+              <option value="today">Today</option>
+              <option value="week">This week</option>
+            </select>
+          </div>
+          <div class="row">
+            <button id="resetFiltersBtn" class="btn secondary">
+              Reset filters
+            </button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Insights</h3>
+          <div class="chips" id="insightChips"></div>
+        </div>
+      </aside>
+
+      <main>
+        <div class="stats">
+          <div class="card">
+            <div class="stat">
+              <span>Total</span><strong id="statTotal">0</strong>
+            </div>
+            <div class="progress"><div id="barTotal"></div></div>
+          </div>
+          <div class="card">
+            <div class="stat">
+              <span>Completed</span><strong id="statDone">0</strong>
+            </div>
+            <div class="progress"><div id="barDone"></div></div>
+          </div>
+          <div class="card">
+            <div class="stat">
+              <span>Overdue</span><strong id="statOverdue">0</strong>
+            </div>
+            <div class="progress"><div id="barOverdue"></div></div>
+          </div>
+          <div class="card">
+            <div class="stat">
+              <span>Focus (P0/P1)</span><strong id="statFocus">0</strong>
+            </div>
+            <div class="progress"><div id="barFocus"></div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="filters">
+            <div class="chips">
+              <span class="chip">Drag tasks between columns</span>
+              <span class="chip">Double‑click title to quick edit</span>
+              <span class="chip">Click ID to copy</span>
+            </div>
+            <select id="sortSelect">
+              <option value="priority">Sort: Priority</option>
+              <option value="dueAsc">Sort: Due ↑</option>
+              <option value="dueDesc">Sort: Due ↓</option>
+              <option value="created">Sort: Created</option>
+            </select>
+            <button id="expandAllBtn" class="btn secondary">Expand all</button>
+            <button id="collapseAllBtn" class="btn secondary">
+              Collapse all
+            </button>
+          </div>
+        </div>
+
+        <div class="board" id="board">
+          <div class="column" data-status="todo">
+            <h4>To Do</h4>
+            <div class="empty">No tasks</div>
+          </div>
+          <div class="column" data-status="doing">
+            <h4>In Progress</h4>
+            <div class="empty">No tasks</div>
+          </div>
+          <div class="column" data-status="done">
+            <h4>Done</h4>
+            <div class="empty">No tasks</div>
+          </div>
+        </div>
+
+        <div class="calendar" id="calendar">
+          <header>
+            <div>
+              <strong id="calTitle">Calendar</strong>
+              <span
+                style="color: var(--muted); font-size: 12px; margin-left: 6px"
+                >(tasks pinned by due date)</span
+              >
+            </div>
+            <div class="actions">
+              <button id="prevMonth" class="btn secondary">◀</button>
+              <button id="todayMonth" class="btn secondary">Today</button>
+              <button id="nextMonth" class="btn secondary">▶</button>
+            </div>
+          </header>
+          <div class="grid" id="calGrid"></div>
+        </div>
+
+        <div class="footer">
+          Data is saved locally in your browser (offline‑friendly via
+          localStorage).
+        </div>
+      </main>
+    </div>
+  </body>
+  <script src="script.js"></script>
+</html>
